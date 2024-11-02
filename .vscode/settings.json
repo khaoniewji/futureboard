@@ -1,0 +1,15 @@
+{
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/src",
+        "${env:QTDIR}/include/**", // Include Qt headers
+        "${env:QTDIR}/lib/**" // Include Qt libraries if necessary
+    ],
+
+    "files.associations": {
+        "qvboxlayout": "cpp",
+        "qquickwidget": "cpp",
+        "qwidget": "cpp",
+        "qvector": "cpp",
+        "qstring": "cpp"
+    }
+}
