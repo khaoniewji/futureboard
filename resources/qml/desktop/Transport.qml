@@ -320,8 +320,6 @@ Rectangle {
         }
     }
 
-
-
     // Existing functions remain the same...
     function updateKey(key, scale) {
         currentKey = key

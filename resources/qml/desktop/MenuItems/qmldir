@@ -1,0 +1,2 @@
+// qmldir
+singleton Items 1.0 Items.qml

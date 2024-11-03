@@ -52,5 +52,9 @@
         <file>icons/arrow-down.svg</file>
         <file>icons/arrow-right.svg</file>
         <file>images/splash.png</file>
+        <file>qml/desktop/CommandPallette.qml</file>
+        <file>data/menuitems.json</file>
+        <file>qml/desktop/MenuItems/Items.qml</file>
+        <file>qml/desktop/MenuItems/qmldir</file>
     </qresource>
 </RCC>

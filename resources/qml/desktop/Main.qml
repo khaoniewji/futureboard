@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import "." as Local
+import "MenuItems" as Menu
 
 Rectangle {
     width: 1280
@@ -78,16 +79,13 @@ Rectangle {
         property bool isPlaying: false
         property real playbackPosition: 0
 
-        // Add transport controls integration
         function onPlayPause() {
             isPlaying = !isPlaying
-            // Implement play/pause logic
         }
 
         function onStop() {
             isPlaying = false
             playbackPosition = 0
-            // Implement stop logic
         }
 
         function onRecord() {
@@ -106,7 +104,6 @@ Rectangle {
         }
         color: "#1E1E1E"
 
-        // Track list panel
         Rectangle {
             id: trackListPanel
             width: 300
@@ -118,12 +115,14 @@ Rectangle {
             color: "#2D2D2D"
             z: 1
 
+            property alias trackListModel: trackView.trackListModel  // Add this property
+
             Local.TrackView {
+                id: trackView
                 anchors.fill: parent
             }
         }
 
-        // Content area with enhanced grid
         Rectangle {
             id: contentArea
             anchors {
@@ -145,18 +144,19 @@ Rectangle {
                     SplitView.maximumHeight: 32
                     SplitView.fillWidth: true
 
-                    property real zoomLevel: 1.0
-                    function zoomIn() {
-                        zoomLevel = Math.min(zoomLevel * 1.2, 4.0)
-                        barInterval = baseBarInterval * zoomLevel
+                    onPositionChanged: function(position) {
+                        // Handle timeline position changes
+                        // For example, update playhead position
+                        transportBar.playbackPosition = position
                     }
-                    function zoomOut() {
-                        zoomLevel = Math.max(zoomLevel / 1.2, 0.25)
-                        barInterval = baseBarInterval * zoomLevel
+
+                    onZoomChanged: function(level) {
+                        // Handle zoom level changes
+                        // Update grid or other elements if needed
+                        gridArea.updateGrid()
                     }
                 }
 
-                // Enhanced grid area
                 Rectangle {
                     id: gridArea
                     SplitView.fillHeight: true
@@ -164,20 +164,104 @@ Rectangle {
                     color: "#202020"
                     clip: true
 
-                    // Vertical grid lines
-                    Grid {
-                        id: verticalGrid
+                    // Flickable to sync with timeline
+                    Flickable {
+                        id: gridFlickable
                         anchors.fill: parent
-                        spacing: timeline.barInterval - 1
-                        columns: timeline.bars
-                        rows: 1
+                        contentWidth: timeline.contentWidth
+                        contentHeight: trackRepeater.count * 42  // Match TrackWidget height
+                        boundsBehavior: Flickable.StopAtBounds
+                        clip: true
 
-                        Repeater {
-                            model: timeline.bars
-                            Rectangle {
-                                width: 1
-                                height: parent.height
-                                color: index % 4 === 0 ? "#3A3A3A" : "#2A2A2A"
+                        // Sync horizontal scrolling with timeline
+                        Connections {
+                            target: timeline
+                            function onScrollPositionChanged() {
+                                gridFlickable.contentX = timeline.scrollPosition
+                            }
+                        }
+
+                        // Background grid
+                        Item {
+                            width: parent.width
+                            height: parent.height
+
+                            // Vertical grid lines
+                            Repeater {
+                                model: initialBars + extraBars
+                                Rectangle {
+                                    x: index * timeline.barInterval
+                                    width: 1
+                                    height: parent.height
+                                    color: index % 4 === 0 ? "#3A3A3A" : "#2A2A2A"
+                                }
+                            }
+
+                            // Beat lines
+                            Repeater {
+                                model: (initialBars + extraBars) * 4
+                                Rectangle {
+                                    x: index * timeline.beatInterval
+                                    width: 1
+                                    height: parent.height
+                                    color: "#2A2A2A"
+                                    visible: index % 4 !== 0  // Don't show on bar lines
+                                    opacity: 0.5
+                                }
+                            }
+                        }
+
+                        // Track content area
+                        Column {
+                            id: trackContentColumn
+                            width: parent.width
+
+                            Repeater {
+                                id: trackRepeater
+                                model: trackListPanel.trackListModel
+
+                                Rectangle {
+                                    id: trackContent
+                                    width: gridFlickable.contentWidth
+                                    height: 43  // Match TrackWidget height
+                                    color: "transparent"
+
+                                    // Track content background
+                                    Rectangle {
+                                        anchors.fill: parent
+                                        color: index % 2 === 0 ? "#1A1A1A" : "#1E1E1E"
+                                        opacity: 0.5
+                                    }
+
+                                    // // Clip area for this track
+                                    // Row {
+                                    //     anchors.fill: parent
+                                    //     spacing: 0
+
+                                    //     // Add your clip components here
+                                    //     // Example placeholder for clips:
+                                    //     Repeater {
+                                    //         model: 3  // Example: 3 clips per track
+                                    //         Rectangle {
+                                    //             width: timeline.barInterval * 2  // 2 bars per clip
+                                    //             height: parent.height - 8
+                                    //             anchors.verticalCenter: parent.verticalCenter
+                                    //             color: model.color || "#297ACC"
+                                    //             opacity: 0.6
+                                    //             radius: 4
+                                    //             x: index * timeline.barInterval * 3  // Space them out
+
+                                    //             // Clip label
+                                    //             Text {
+                                    //                 anchors.centerIn: parent
+                                    //                 text: "Clip " + (index + 1)
+                                    //                 color: "#FFFFFF"
+                                    //                 font.pixelSize: 10
+                                    //             }
+                                    //         }
+                                    //     }
+                                    // }
+                                }
                             }
                         }
                     }
@@ -188,14 +272,16 @@ Rectangle {
                         width: 2
                         height: parent.height
                         color: "#297ACC"
-                        x: transportBar.playbackPosition * timeline.barInterval
+                        x: transportBar.playbackPosition * timeline.barInterval - gridFlickable.contentX
                         visible: true
+                        z: 1000
                     }
+
+
                 }
             }
         }
 
-        // Enhanced scrollbars
         ScrollBar {
             id: verticalScrollBar
             anchors {
@@ -249,7 +335,6 @@ Rectangle {
             color: "white"
         }
 
-        // Additional status indicators
         Row {
             anchors.right: parent.right
             anchors.rightMargin: 10
@@ -268,5 +353,63 @@ Rectangle {
                 font.family: "IBM Plex Sans"
             }
         }
+    }
+
+    Local.CommandPallette {
+        id: commandPalette
+        anchors.fill: parent
+        visible: false
+
+        // Convert menu items to commands
+        Component.onCompleted: {
+            var commands = [];
+            Menu.Items.menuItems.forEach(function(menuGroup) {
+                menuGroup.items.forEach(function(item) {
+                    commands.push({
+                        label: item.name,
+                        shortcut: item.shortcut || "",
+                        category: menuGroup.menu
+                    });
+                });
+            });
+            applicationCommands = commands;
+        }
+
+
+        onCommandExecuted: function(command) {
+            switch(command.label) {
+                case "Play/Pause":
+                    transportBar.onPlayPause()
+                    break
+                case "Stop":
+                    transportBar.onStop()
+                    break
+                case "Toggle Record":
+                    transportBar.onRecord()
+                    break
+                case "Zoom In":
+                    timeline.zoomIn()
+                    break
+                case "Zoom Out":
+                    timeline.zoomOut()
+                    break
+                default:
+                    console.log("Executing command:", command.label)
+            }
+        }
+    }
+    Connections {
+        target: commandPalette
+        function onVisibleChanged() {
+            if (commandPalette.visible) {
+                commandPalette.forceActiveFocus()
+            }
+        }
+    }
+
+    Shortcut {
+        sequences: ["Ctrl+Shift+P", "Ctrl+P"]
+        context: Qt.ApplicationShortcut
+        onActivated: commandPalette.show()
     }
 }

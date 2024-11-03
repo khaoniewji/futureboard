@@ -8,7 +8,7 @@ Rectangle {
     height: 42
     color: "#242424"  // Ableton dark gray
     radius: 0  // Ableton uses sharp corners
-    
+
     property bool expanded: true
     property bool selected: false
     property real volume: 0.75
@@ -94,16 +94,16 @@ Rectangle {
                         { label: "M", active: false },
                         { label: "S", active: false }
                     ]
-                    
+
                     Rectangle {
                         id: controlButton
                         width: 20
                         height: 20
                         color: buttonMouse.containsMouse ? "transparent" :
                                modelData.active ? "#FF764D" : "#2F2F2F"
-                        
+
                         property bool isHovered: false
-                        
+
                         Text {
                             anchors.centerIn: parent
                             text: modelData.label
@@ -111,7 +111,7 @@ Rectangle {
                             font.pixelSize: 11
                             font.family: "Inter Display"
                         }
-                        
+
                         MouseArea {
                             id: buttonMouse
                             anchors.fill: parent

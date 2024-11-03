@@ -2,13 +2,15 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
-import "." as Local
 
 Rectangle {
     id: trackView
     color: "#2D2D2D"
 
-    property var trackModel: ListModel {
+    property alias trackListModel: trackModel  // Changed from trackModel to trackListModel
+
+    ListModel {
+        id: trackModel
         ListElement {
             name: "Audio 1"
             type: "audio"
@@ -32,16 +34,15 @@ Rectangle {
 
         Rectangle {
             width: parent.width
-            height: 32
+            height: 33
             color: "#3A3A3A"
 
-            // Padding for the text
             Text {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
-                anchors.leftMargin: 10  // Padding on the left
+                anchors.leftMargin: 10
                 anchors.right: parent.right
-                anchors.rightMargin: 10 // Padding on the right
+                anchors.rightMargin: 10
                 text: "Add Track"
                 color: "#FFFFFF"
                 font.pixelSize: 11
@@ -60,8 +61,6 @@ Rectangle {
             }
         }
 
-
-        // Track list
         ListView {
             id: trackList
             Layout.fillWidth: true
@@ -70,15 +69,12 @@ Rectangle {
             spacing: 1
             clip: true
 
-            delegate: Local.TrackWidget {
+            delegate: TrackWidget {
                 width: trackList.width
-                // trackColor: model.color
-                // Other track-specific properties
             }
         }
     }
 
-    // Context menu for track operations
     Menu {
         id: trackContextMenu
         MenuItem { text: "Add Audio Track" }
