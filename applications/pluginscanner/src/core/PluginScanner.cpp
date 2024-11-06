@@ -36,6 +36,7 @@ PluginScanner::PluginScanner()
     , enableVST3(true)
     , enableCLAP(true)
 {
+    juce::MessageManager::getInstance(); // Ensure message manager is initialized
     initializeJuceFormats();
     auto defaultPaths = getDefaultPluginPaths();
     searchPaths.insert(searchPaths.end(), defaultPaths.begin(), defaultPaths.end());
@@ -46,7 +47,14 @@ PluginScanner::~PluginScanner() {
 }
 
 void PluginScanner::initializeJuceFormats() {
-    formatManager->addDefaultFormats();
+    // Add VST3 format first
+    if (enableVST3) {
+        formatManager->addFormat(new juce::VST3PluginFormat());
+    }
+    // Then add VST2 format
+    if (enableVST2) {
+        formatManager->addFormat(new juce::VSTPluginFormat());
+    }
 }
 
 void PluginScanner::scanPlugins(const ProgressCallback& progress) {
@@ -151,9 +159,11 @@ bool PluginScanner::validateWithJuce(const std::filesystem::path& path, PluginIn
 
     juce::AudioPluginFormat* format = nullptr;
     if (path.extension() == ".vst3") {
-        format = formatManager->getFormat(0); // VST3 format
+        // Get VST3 format (should be first in the list after initialization)
+        format = formatManager->getFormat(0);
     } else {
-        format = formatManager->getFormat(1); // VST2 format
+        // Get VST2 format (should be second in the list)
+        format = formatManager->getFormat(1);
     }
 
     if (!format) {
@@ -170,8 +180,13 @@ bool PluginScanner::validateWithJuce(const std::filesystem::path& path, PluginIn
             return false;
         }
 
-        auto desc = descriptions[0];
+        auto* desc = descriptions[0];
+        if (desc == nullptr) {
+            info.error = "Invalid plugin description";
+            return false;
+        }
 
+        // Fill in the plugin information
         info.name = desc->name.toStdString();
         info.version = desc->version.toStdString();
         info.vendor = desc->manufacturerName.toStdString();
@@ -189,7 +204,7 @@ bool PluginScanner::validateWithJuce(const std::filesystem::path& path, PluginIn
         return true;
     }
     catch (const std::exception& e) {
-        info.error = e.what();
+        info.error = std::string("Validation error: ") + e.what();
         return false;
     }
 }
