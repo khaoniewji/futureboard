@@ -1,0 +1,41 @@
+#include <windows.h>
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,0
+PRODUCTVERSION  @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,0
+FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+#ifdef _DEBUG
+FILEFLAGS       VS_FF_DEBUG
+#else
+FILEFLAGS       0
+#endif
+FILEOS          VOS_NT_WINDOWS32
+FILETYPE        VFT_APP
+FILESUBTYPE     VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4" // U.S. English - multilingual (hex)
+        BEGIN
+            VALUE "CompanyName",      "Khaoniewji"
+            VALUE "FileDescription",  "VST/VST3/CLAP Plugin Scanner"
+            VALUE "FileVersion",      "@PROJECT_VERSION@"
+            VALUE "InternalName",     "vstscanner"
+            VALUE "LegalCopyright",   "Copyright © 2024 Khaoniewji. All rights reserved."
+            VALUE "LegalTrademarks",  "VST is a trademark of Steinberg Media Technologies GmbH"
+            VALUE "OriginalFilename", "vstscanner.exe"
+            VALUE "ProductName",      "Futureboard VST Scanner"
+            VALUE "ProductVersion",   "@PROJECT_VERSION@"
+            VALUE "Comments",         "Built with JUCE and CLAP"
+        END
+    END
+
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252 // U.S. English - multilingual (decimal)
+    END
+END
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_APPICON ICON "icon.ico"

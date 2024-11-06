@@ -321,7 +321,7 @@ Rectangle {
 
     Rectangle {
         id: statusBar
-        height: 25
+        height: 24
         width: parent.width
         anchors.bottom: parent.bottom
         color: "#383838"
