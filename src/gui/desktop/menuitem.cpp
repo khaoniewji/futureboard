@@ -75,6 +75,7 @@ QVector<Menu> createMenuItems() {
         {"Mixer", "F3"},
         {"Timeline", "F5"},
         {"Editor", "F4"},
+        {"Audio Manager"},
         {"Plugin Manager"}
     };
     menuItems.append(windowMenu);

@@ -2,7 +2,8 @@
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/src",
         "${env:QTDIR}/include/**", // Include Qt headers
-        "${env:QTDIR}/lib/**" // Include Qt libraries if necessary
+        "${env:QTDIR}/lib/**", // Include Qt libraries if necessary
+        "${workspaceFolder}/external/**" // Include external libraries
     ],
 
     "files.associations": {
@@ -10,6 +11,19 @@
         "qquickwidget": "cpp",
         "qwidget": "cpp",
         "qvector": "cpp",
-        "qstring": "cpp"
+        "qstring": "cpp",
+        "CMakeLists.txt": "cmake",
+        "qobject": "cpp",
+        "qstringlist": "cpp"
+    },
+
+    "cmake.configureSettings": {
+        "CMAKE_TOOLCHAIN_FILE": "M:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_PREFIX_PATH": "${env:QTDIR}"
+    },
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.generator": "Visual Studio 17 2022",
+    "cmake.debugConfig": {
+        "args": ["--debug"]
     }
 }

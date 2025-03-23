@@ -56,5 +56,13 @@
         <file>data/menuitems.json</file>
         <file>qml/desktop/MenuItems/Items.qml</file>
         <file>qml/desktop/MenuItems/qmldir</file>
+        <file>qml/desktop/Mixer/main.qml</file>
+        <file>qml/desktop/Mixer/MixerRack.qml</file>
+        <file>qml/desktop/Mixer/MasterTrack.qml</file>
+        <file>qml/Styles/Colors.qml</file>
+        <file>qml/desktop/TrackHeader.qml</file>
+        <file>qml/desktop/CustomPopup.qml</file>
+        <file>qml/desktop/AudioManager.qml</file>
+        <file>qml/desktop/ComboBox.qml</file>
     </qresource>
 </RCC>

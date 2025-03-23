@@ -1,0 +1,26 @@
+{
+  "audio": {
+    "lastDevice": "",
+    "lastInputDevice": "Mic/Inst/Line In 1/2 (3- Studio 24c)",
+    "lastOutputDevice": "Main Out 1/2 (3- Studio 24c)",
+    "bufferSize": 256,
+    "api": 0
+  },
+  "deviceScan": {
+    "mme": [
+      "Microsoft Sound Mapper - Input",
+      "Mic/Inst/Line In 1/2 (3- Studio 24c)",
+      "Virtual 1/2 (3- Studio 24c)"
+    ],
+    "wasapi": [
+      "Microphone (3- Studio 24c)",
+      "Line In (3- Studio 24c)",
+      "Speakers (3- Studio 24c)"
+    ],
+    "asio": [
+      "3- Studio 24c ASIO",
+      "FL Studio ASIO",
+      "ASIO4ALL v2"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CMake Configure",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S",
+                ".",
+                "-B",
+                "build",
+                "-DCMAKE_TOOLCHAIN_FILE=M:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+                "-DCMAKE_PREFIX_PATH=${env:QTDIR}",
+                "-DCMAKE_BUILD_TYPE=Debug"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "CMake Build",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "--config",
+                "Debug"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "CMake Configure"
+            ]
+        },
+        {
+            "label": "Deploy Qt",
+            "type": "shell",
+            "command": "${env:QTDIR}/bin/windeployqt",
+            "args": [
+                "--qmldir",
+                "${env:QTDIR}/qml",
+                "./build/Debug/Futureboard.exe"
+            ],
+            "dependsOn": [
+                "CMake Build"
+            ]
+        }
+    ]
+}

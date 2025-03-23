@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/qml/desktop">
+        <file>desktop/TrackView.qml</file>
+        <file>desktop/TrackWidget.qml</file>
+        <file>desktop/TrackHeader.qml</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>icons/audio.svg</file>
+        <file>icons/midi.svg</file>
+        <file>icons/instrument.svg</file>
+        <file>icons/group.svg</file>
+        <file>icons/fx.svg</file>
+        <file>icons/folder.svg</file>
+        <file>icons/plus.svg</file>
+    </qresource>
+</RCC>

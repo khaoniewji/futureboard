@@ -110,7 +110,7 @@ Rectangle {
                         placeholderText: "Type a command..."
                         color: "#FFFFFF"
                         placeholderTextColor: "#808080"
-                        font: style.defaultFont
+                        font.family: "Inter"
                         selectByMouse: true
                         focus: true
 
@@ -125,7 +125,7 @@ Rectangle {
 
                     Text {
                         text: "ESC to close"
-                        font: style.defaultFont
+                        font.family: "Inter"
                         color: "#FFFFFF"
                         opacity: 0.5
                     }
@@ -155,7 +155,7 @@ Rectangle {
 
                         Text {
                             text: modelData.label
-                            font: style.defaultFont
+                            font.family: "Inter"
                             color: "#FFFFFF"
                             opacity: mouseArea.containsMouse || ListView.isCurrentItem ? 1 : 0.8
                             Layout.fillWidth: true
@@ -163,14 +163,14 @@ Rectangle {
 
                         Text {
                             text: modelData.category || ""
-                            font: style.defaultFont
+                            font.family: "Inter"
                             color: "#FFFFFF"
                             opacity: 0.5
                         }
 
                         Text {
                             text: modelData.shortcut || ""
-                            font: style.defaultFont
+                            font.family: "Inter"
                             color: "#FFFFFF"
                             opacity: 0.5
                         }

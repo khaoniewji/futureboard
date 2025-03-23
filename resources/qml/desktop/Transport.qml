@@ -1,5 +1,9 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
+import com.futureboard.system 1.0
+import "../Styles" as Styles
 import "." as Local
 
 Rectangle {
@@ -10,7 +14,8 @@ Rectangle {
         top: parent.top
     }
     height: 40
-    color: "#353535"
+    color: "#252525"  // Direct color instead of style
+    border.color: "#121212"
 
     // Properties for binding
     property string currentKey: "C"
@@ -24,298 +29,262 @@ Rectangle {
     // property alias currentScale: currentScaleText.text
     property bool chordCircleVisible: false // Control visibility
 
-
     // Common text styling
     QtObject {
         id: textStyles
-        property color labelColor: Qt.rgba(1, 1, 1, 0.5)
-        property color valueColor: "#ffffff"
-        property string fontFamily: "Inter Display"
-        property int labelSize: 10
-        property int valueSize: 14
+        property color labelColor: "#808080"  // Direct secondary text color
+        property color valueColor: "#FFFFFF"  // Direct primary text color
+        property string fontFamily: "Inter"    // Match mixer font
+        property int labelSize: 11
+        property int valueSize: 13
     }
 
     Row {
         id: leftGroups
         anchors {
             left: parent.left
-            leftMargin: 16
+            leftMargin: 8
             verticalCenter: parent.verticalCenter
         }
-        spacing: 12
+        spacing: -1
         height: parent.height
-        // Group 1 - Key Display with Toggle Button
-        Column {
+
+        // Key Display Group
+        Rectangle {
+            height: 32
+            width: contentLayout.width + 16
+            color: "#272C32"  // Mixer control background
+            border.color: "#0A0B08"
+            radius: 2
             anchors.verticalCenter: parent.verticalCenter
-            spacing: -2
 
-            Text {
-                text: "Key"
-                font {
-                    family: textStyles.fontFamily
-                    italic: true
-                    pixelSize: textStyles.labelSize
+            ColumnLayout {
+                id: contentLayout
+                anchors.centerIn: parent
+                spacing: 0
+
+                Text {
+                    text: "KEY"
+                    font.family: textStyles.fontFamily
+                    font.pixelSize: textStyles.labelSize
+                    color: textStyles.labelColor
+                    Layout.alignment: Qt.AlignLeft
                 }
-                color: textStyles.labelColor
+
+                Text {
+                    text: currentKey + " " + currentScale
+                    font.family: textStyles.fontFamily
+                    font.pixelSize: textStyles.valueSize
+                    font.weight: Font.Medium
+                    color: textStyles.valueColor
+                    Layout.alignment: Qt.AlignLeft
+                }
             }
 
-            Button {
-                text: currentKey + " " + currentScale
-                font.pixelSize: textStyles.valueSize
-                font.family: "Inter Display"
-                font.weight: Font.DemiBold
-                onClicked: {
-                    transportBar.chordCircleVisible = !transportBar.chordCircleVisible
-                    console.log("ChordCircle visibility toggled:", transportBar.chordCircleVisible)
-                }
-                background: Rectangle {
-                    color: "transparent"
-                }
-                palette.buttonText: "white"
-                 leftPadding: 0
-                 rightPadding: 0
-                 topPadding: 0
-                 bottomPadding: 0
-            }
-        }
-        // Group 2 - Tempo
-        Column {
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: -2
-
-            Text {
-                text: "Tempo"
-                font {
-                    family: textStyles.fontFamily
-                    italic: true
-                    pixelSize: textStyles.labelSize
-                }
-                color: textStyles.labelColor
-            }
-
-            Text {
-                text: currentTempo
-                font {
-                    family: textStyles.fontFamily
-                    pixelSize: textStyles.valueSize
-                    weight: Font.DemiBold
-                }
-                color: textStyles.valueColor
+            MouseArea {
+                anchors.fill: parent
+                onClicked: transportBar.chordCircleVisible = !transportBar.chordCircleVisible
             }
         }
 
-        // Group 3 - Time Signature
-        Column {
+        // Tempo Group
+        Rectangle {
+            height: 32
+            width: tempoLayout.width + 16
+            color: "#272C32"
+            border.color: "#0A0B08"
+            radius: 2
             anchors.verticalCenter: parent.verticalCenter
-            spacing: -2
 
-            Text {
-                text: "Time Signature"
-                font {
-                    family: textStyles.fontFamily
-                    italic: true
-                    pixelSize: textStyles.labelSize
-                }
-                color: textStyles.labelColor
-            }
+            ColumnLayout {
+                id: tempoLayout
+                anchors.centerIn: parent
+                spacing: 0
 
-            Text {
-                text: signatureNumerator + " / " + signatureDenominator
-                font {
-                    family: textStyles.fontFamily
-                    pixelSize: textStyles.valueSize
-                    weight: Font.DemiBold
+                Text {
+                    text: "BPM"
+                    font.family: textStyles.fontFamily
+                    font.pixelSize: textStyles.labelSize
+                    color: textStyles.labelColor
+                    Layout.alignment: Qt.AlignHLeft
                 }
-                color: textStyles.valueColor
+
+                Text {
+                    text: currentTempo
+                    font.family: textStyles.fontFamily
+                    font.pixelSize: textStyles.valueSize
+                    font.weight: Font.Medium
+                    color: textStyles.valueColor
+                    Layout.alignment: Qt.AlignHLeft
+                }
             }
         }
 
-        Column {
+        // Time Signature Group
+        Rectangle {
+            height: 32
+            width: signatureLayout.width + 16
+            color: "#272C32"
+            border.color: "#0A0B08"
+            radius: 2
             anchors.verticalCenter: parent.verticalCenter
-            spacing: -2
 
-            Text {
-                text: "Timecode"
-                font {
-                    family: textStyles.fontFamily
-                    italic: true
-                    pixelSize: textStyles.labelSize
-                }
-                color: textStyles.labelColor
-            }
+            ColumnLayout {
+                id: signatureLayout
+                anchors.centerIn: parent
+                spacing: 0
 
-            Text {
-                text: timeDisplay + " / " + beatDisplay
-                font {
-                    family: textStyles.fontFamily
-                    pixelSize: textStyles.valueSize
-                    weight: Font.DemiBold
+                Text {
+                    text: "TIME"
+                    font.family: textStyles.fontFamily
+                    font.pixelSize: textStyles.labelSize
+                    color: textStyles.labelColor
+                    Layout.alignment: Qt.AlignHLeft
                 }
-                color: textStyles.valueColor
+
+                Text {
+                    text: signatureNumerator + "/" + signatureDenominator
+                    font.family: textStyles.fontFamily
+                    font.pixelSize: textStyles.valueSize
+                    font.weight: Font.Medium
+                    color: textStyles.valueColor
+                    Layout.alignment: Qt.AlignHLeft
+                }
             }
         }
     }
 
+    // Transport Controls
+        // Transport Controls
     Row {
         id: centerControls
+        anchors.centerIn: parent
+        spacing: -1
+
+        Repeater {
+            model: [
+                { icon: "qrc:/icons/Record.png", color: "#FF3333" },  // Record
+                { icon: "qrc:/icons/Back.png", color: "#808080" },    // Previous
+                { icon: "qrc:/icons/Play.png", color: "#3F7FD4" },    // Play
+                { icon: "qrc:/icons/Back.png", color: "#808080", rotation: 180 }, // Next
+                { icon: "qrc:/icons/Metronome.png", color: "#808080" }  // Metronome
+            ]
+
+            Rectangle {
+                width: 32
+                height: 32
+                color: "#272C32"
+                border.color: "#0A0B08"
+                radius: 2
+
+                Image {
+                    anchors.centerIn: parent
+                    source: modelData.icon
+                    width: 16
+                    height: 16
+                    rotation: modelData.rotation || 0
+
+                    ColorOverlay {
+                        anchors.fill: parent
+                        source: parent
+                        color: modelData.color
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: parent.color = "#353B41"
+                    onReleased: parent.color = "#272C32"
+                    onClicked: {
+                        // Add your click handling logic here
+                    }
+                }
+            }
+        }
+    }
+
+    // Add before the time display
+    Row {
         anchors {
-            centerIn: parent
-            horizontalCenter: parent.horizontalCenter
+            right: timeLayout.parent.left
+            rightMargin: 8
+            verticalCenter: parent.verticalCenter
         }
-        spacing: 10
-        height: parent.height
+        spacing: -1
 
-        // Mixer Button
-        ToolButton {
-            id: mixerButton
-            width: 20
-            height:20
-            anchors.verticalCenter: parent.verticalCenter
-            background: Rectangle {
-                color: "transparent"
-            }
+        Repeater {
+            model: [
+                { label: "CPU", value: PerformanceMeter.cpuUsage.toFixed(1) + "%" },
+                { label: "RAM", value: PerformanceMeter.ramUsage },
+                { label: "DISK", value: PerformanceMeter.diskSpeed }
+            ]
 
-            Image {
-                anchors.fill: parent
-                source: "qrc:/icons/Mixer.png"  // Replace with actual path to PNG icon
-                fillMode: Image.PreserveAspectFit
-            }
+            Rectangle {
+                height: 32
+                width: metricLayout.width + 16
+                color: "#272C32"
+                border.color: "#0A0B08"
+                radius: 2
 
-            onClicked: {
-                // Implement mixer action
-                console.log("Mixer button clicked")
-            }
-        }
+                ColumnLayout {
+                    id: metricLayout
+                    anchors.centerIn: parent
+                    spacing: 0
 
-        // Redo Button
-        ToolButton {
-            id: redoButton
-            width: 20
-            height:20
-            anchors.verticalCenter: parent.verticalCenter
-            background: Rectangle {
-                color: "transparent"
-            }
+                    Text {
+                        text: modelData.label
+                        font.family: textStyles.fontFamily
+                        font.pixelSize: textStyles.labelSize
+                        color: textStyles.labelColor
+                        Layout.alignment: Qt.AlignLeft
+                    }
 
-            Image {
-                anchors.fill: parent
-                source: "qrc:/icons/Redo.png"  // Replace with actual path to PNG icon
-                fillMode: Image.PreserveAspectFit
-            }
-
-            onClicked: {
-                // Implement redo action
-                console.log("Redo button clicked")
+                    Text {
+                        text: modelData.value
+                        font.family: textStyles.fontFamily
+                        font.pixelSize: textStyles.valueSize
+                        font.weight: Font.Medium
+                        color: textStyles.valueColor
+                        Layout.alignment: Qt.AlignLeft
+                    }
+                }
             }
         }
+    }
 
-        // Undo Button
-        ToolButton {
-            id: undoButton
-            width: 20
-            height:20
-            anchors.verticalCenter: parent.verticalCenter
-            background: Rectangle {
-                color: "transparent"
-            }
-
-            Image {
-                anchors.fill: parent
-                source: "qrc:/icons/Undo.png"  // Replace with actual path to PNG icon
-                fillMode: Image.PreserveAspectFit
-            }
-
-            onClicked: {
-                // Implement undo action
-                console.log("Undo button clicked")
-            }
+    // Time Display
+    Rectangle {
+        anchors {
+            right: parent.right
+            rightMargin: 16
+            verticalCenter: parent.verticalCenter
         }
+        height: 32
+        width: timeLayout.width + 16
+        color: "#272C32"
+        border.color: "#0A0B08"
+        radius: 2
 
-        // Previous Button
-        ToolButton {
-            id: prevButton
-            width: 20
-            height:20
-            anchors.verticalCenter: parent.verticalCenter
-            background: Rectangle {
-                color: "transparent"
+        ColumnLayout {
+            id: timeLayout
+            anchors.centerIn: parent
+            spacing: 0
+
+            Text {
+                text: "TIME"
+                font.family: textStyles.fontFamily
+                font.pixelSize: textStyles.labelSize
+                color: textStyles.labelColor
+                Layout.alignment: Qt.AlignHLeft
             }
 
-            Image {
-                anchors.fill: parent
-                source: "qrc:/icons/Back.png"  // Replace with actual path to PNG icon
-                fillMode: Image.PreserveAspectFit
-            }
-
-            onClicked: {
-                // Implement previous track/section action
-                console.log("Previous button clicked")
-            }
-        }
-
-        // Record Button
-        ToolButton {
-            id: recordButton
-            width: 20
-            height:20
-            anchors.verticalCenter: parent.verticalCenter
-            background: Rectangle {
-                color: "transparent"
-            }
-
-            Image {
-                anchors.fill: parent
-                source: "qrc:/icons/Record.png"  // Replace with actual path to PNG icon
-                fillMode: Image.PreserveAspectFit
-            }
-
-            onClicked: {
-                // Implement record action
-                console.log("Record button clicked")
-            }
-        }
-
-        // Play Button
-        ToolButton {
-            id: playButton
-            width: 20
-            height:20
-            anchors.verticalCenter: parent.verticalCenter
-            background: Rectangle {
-                color: "transparent"
-            }
-
-            Image {
-                anchors.fill: parent
-                source: "qrc:/icons/Play.png"  // Replace with actual path to PNG icon
-                fillMode: Image.PreserveAspectFit
-            }
-
-            onClicked: {
-                // Implement play action
-                console.log("Play button clicked")
-            }
-        }
-
-        // Metronome Button
-        ToolButton {
-            id: metronomeButton
-            width: 20
-            height:20
-            anchors.verticalCenter: parent.verticalCenter
-            background: Rectangle {
-                color: "transparent"
-            }
-
-            Image {
-                anchors.fill: parent
-                source: "qrc:/icons/Metronome.png"  // Replace with actual path to PNG icon
-                fillMode: Image.PreserveAspectFit
-            }
-
-            onClicked: {
-                // Implement metronome toggle action
-                console.log("Metronome button clicked")
+            Text {
+                text: timeDisplay
+                font.family: textStyles.fontFamily
+                font.pixelSize: textStyles.valueSize
+                font.weight: Font.Medium
+                color: textStyles.valueColor
+                Layout.alignment: Qt.AlignHLeft
             }
         }
     }

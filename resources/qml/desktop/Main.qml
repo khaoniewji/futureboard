@@ -115,11 +115,24 @@ Rectangle {
             color: "#2D2D2D"
             z: 1
 
-            property alias trackListModel: trackView.trackListModel  // Add this property
-
-            Local.TrackView {
-                id: trackView
+            ColumnLayout {
                 anchors.fill: parent
+                spacing: 0
+
+                TrackHeader {
+                    id: trackHeader
+                    Layout.fillWidth: true
+                    height: 28
+                    onAddTrackClicked: trackView.addTrackDialog.open()
+                    onToolsClicked: trackView.contextMenu.popup()
+                }
+
+                TrackView {
+                    id: trackView
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    trackListModel: TrackManager.trackModel // Add this explicit binding
+                }
             }
         }
 
@@ -330,8 +343,8 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: 10
             anchors.verticalCenter: parent.verticalCenter
-            font.family: "IBM Plex Sans"
-            text: "Current Project: Untitled.ftbp / A = 440hz / Sample Rate: 480000 / ASIO: FlexASIO 256smp 4.04 ms"
+            font.family: "Inter Display"
+            text: AudioEngine.statusText
             color: "white"
         }
 
@@ -344,13 +357,13 @@ Rectangle {
             Text {
                 text: transportBar.currentBpm + " BPM"
                 color: "white"
-                font.family: "IBM Plex Sans"
+                font.family: "Inter Display"
             }
 
             Text {
                 text: transportBar.timeSignature
                 color: "white"
-                font.family: "IBM Plex Sans"
+                font.family: "Inter Display"
             }
         }
     }
@@ -411,5 +424,29 @@ Rectangle {
         sequences: ["Ctrl+Shift+P", "Ctrl+P"]
         context: Qt.ApplicationShortcut
         onActivated: commandPalette.show()
+    }
+
+    // Example CustomPopup usage
+    CustomPopup {
+        id: examplePopup
+        title: "Example Popup"
+        width: 300
+        height: 200
+        modal: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+        parent: Overlay.overlay
+
+        ColumnLayout {
+            spacing: 8
+            Text {
+                text: "Popup Content"
+                color: "#B0B0B0"
+                font.family: "Inter Display"
+            }
+            Button {
+                text: "Close"
+                onClicked: examplePopup.close()
+            }
+        }
     }
 }

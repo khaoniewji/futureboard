@@ -1,9 +1,10 @@
 {
   "dependencies": [
-    "fftw3",
-    "portaudio",
     "sdl2",
     "zlib",
-    "mp3lame"
+    "mp3lame",
+    "juce",
+    "boost-asio"
+
   ]
 }
